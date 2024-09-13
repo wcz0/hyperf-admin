@@ -4,8 +4,157 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "88f2a4d4a4e81dc7d415bcdf39930654",
+    "content-hash": "e476c9acfce43e8fada586762ca156fd",
     "packages": [
+        {
+            "name": "96qbhy/hyperf-auth",
+            "version": "v3.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/qbhy/hyperf-auth.git",
+                "reference": "0252048d758c1c793ebe6448f3fd744e4e2c7793"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/qbhy/hyperf-auth/zipball/0252048d758c1c793ebe6448f3fd744e4e2c7793",
+                "reference": "0252048d758c1c793ebe6448f3fd744e4e2c7793",
+                "shasum": ""
+            },
+            "require": {
+                "96qbhy/simple-jwt": "^v1.5",
+                "ext-json": "*",
+                "ext-redis": "*",
+                "hyperf/cache": "^3.1",
+                "hyperf/di": "^3.1",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "brainmaestro/composer-git-hooks": "^2.8",
+                "friendsofphp/php-cs-fixer": "^2.14",
+                "hyperf/command": "^3.1",
+                "hyperf/config": "^3.1",
+                "hyperf/database": "^3.1",
+                "hyperf/event": "^3.1",
+                "hyperf/framework": "^3.1",
+                "hyperf/redis": "^3.1",
+                "hyperf/session": "^3.1",
+                "hyperf/testing": "^3.1",
+                "hyperf/utils": "^3.1",
+                "itsgoingd/clockwork": "^5.0",
+                "phpstan/phpstan": "^0.12",
+                "swoft/swoole-ide-helper": "dev-master",
+                "symfony/console": "^5.3",
+                "symfony/var-dumper": "^5.3"
+            },
+            "suggest": {
+                "ext-redis": "*"
+            },
+            "type": "library",
+            "extra": {
+                "hyperf": {
+                    "config": "Qbhy\\HyperfAuth\\ConfigProvider"
+                },
+                "hooks": {
+                    "pre-commit": [
+                        "echo committing as $(git config user.name)",
+                        "vendor/bin/php-cs-fixer fix .",
+                        "git add .",
+                        "composer test"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helper.php"
+                ],
+                "psr-4": {
+                    "Qbhy\\HyperfAuth\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "hyperf 的 auth 组件",
+            "keywords": [
+                "hyperf",
+                "hyperf-auth",
+                "jwt-auth",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/qbhy/hyperf-auth/issues",
+                "source": "https://github.com/qbhy/hyperf-auth/tree/v3.1.2"
+            },
+            "time": "2024-01-11T04:45:43+00:00"
+        },
+        {
+            "name": "96qbhy/simple-jwt",
+            "version": "v1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/qbhy/simple-jwt.git",
+                "reference": "5ed9564af7151f2cecc19249ffac4c697e5a7efb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/qbhy/simple-jwt/zipball/5ed9564af7151f2cecc19249ffac4c697e5a7efb",
+                "reference": "5ed9564af7151f2cecc19249ffac4c697e5a7efb",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/cache": "^1.10",
+                "ext-json": ">=1.0",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "brainmaestro/composer-git-hooks": "^2.8",
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "hyperf/config": "^3.1",
+                "hyperf/context": "~3.1.0",
+                "phpunit/phpunit": "^10.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "hooks": {
+                    "pre-commit": [
+                        "echo committing as $(git config user.name)",
+                        "vendor/bin/php-cs-fixer fix .",
+                        "git add .",
+                        "composer test"
+                    ]
+                },
+                "hyperf": {
+                    "config": "Qbhy\\SimpleJwt\\Hyperf\\ConfigProvider"
+                },
+                "laravel": {
+                    "providers": [
+                        "Qbhy\\SimpleJwt\\Laravel\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Qbhy\\SimpleJwt\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "96qbhy",
+                    "email": "96qbhy@gmail.com"
+                }
+            ],
+            "description": "简单的 jwt 实现",
+            "support": {
+                "issues": "https://github.com/qbhy/simple-jwt/issues",
+                "source": "https://github.com/qbhy/simple-jwt/tree/v1.5"
+            },
+            "time": "2023-12-05T08:17:09+00:00"
+        },
         {
             "name": "carbonphp/carbon-doctrine-types",
             "version": "3.2.0",
@@ -74,6 +223,105 @@
                 }
             ],
             "time": "2024-02-09T16:56:22+00:00"
+        },
+        {
+            "name": "doctrine/cache",
+            "version": "1.13.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/cache.git",
+                "reference": "56cd022adb5514472cb144c087393c1821911d09"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/56cd022adb5514472cb144c087393c1821911d09",
+                "reference": "56cd022adb5514472cb144c087393c1821911d09",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~7.1 || ^8.0"
+            },
+            "conflict": {
+                "doctrine/common": ">2.2,<2.4"
+            },
+            "require-dev": {
+                "alcaeus/mongo-php-adapter": "^1.1",
+                "cache/integration-tests": "dev-master",
+                "doctrine/coding-standard": "^9",
+                "mongodb/mongodb": "^1.1",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
+                "predis/predis": "~1.0",
+                "psr/cache": "^1.0 || ^2.0 || ^3.0",
+                "symfony/cache": "^4.4 || ^5.4 || ^6",
+                "symfony/var-exporter": "^4.4 || ^5.4 || ^6"
+            },
+            "suggest": {
+                "alcaeus/mongo-php-adapter": "Required to use legacy MongoDB driver"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\Cache\\": "lib/Doctrine/Common/Cache"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "PHP Doctrine Cache library is a popular cache implementation that supports many different drivers such as redis, memcache, apc, mongodb and others.",
+            "homepage": "https://www.doctrine-project.org/projects/cache.html",
+            "keywords": [
+                "abstraction",
+                "apcu",
+                "cache",
+                "caching",
+                "couchdb",
+                "memcached",
+                "php",
+                "redis",
+                "xcache"
+            ],
+            "support": {
+                "issues": "https://github.com/doctrine/cache/issues",
+                "source": "https://github.com/doctrine/cache/tree/1.13.0"
+            },
+            "funding": [
+                {
+                    "url": "https://www.doctrine-project.org/sponsorship.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/phpdoctrine",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fcache",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-05-20T20:06:54+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -4581,6 +4829,57 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "slowlyo/amis-renderer",
+            "version": "6.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/slowlyo/amis-renderer.git",
+                "reference": "f005274c67c642d23fdd1a302ba1129bd984e663"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/slowlyo/amis-renderer/zipball/f005274c67c642d23fdd1a302ba1129bd984e663",
+                "reference": "f005274c67c642d23fdd1a302ba1129bd984e663",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.4"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Slowlyo\\AmisRenderers\\": "src/AmisRenderers/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Slowlyo",
+                    "email": "slowlyo_email@qq.com",
+                    "homepage": "https://github.com/slowlyo"
+                }
+            ],
+            "description": "Amis Renderer",
+            "homepage": "https://github.com/slowlyo/amis-renderer",
+            "keywords": [
+                "amis"
+            ],
+            "support": {
+                "email": "slowlyo_email@qq.com",
+                "forum": "https://github.com/Slowlyo/amis-renderer/discussions",
+                "issues": "https://github.com/Slowlyo/amis-renderer/issues",
+                "source": "https://github.com/slowlyo/amis-renderer/tree/6.2.2"
+            },
+            "time": "2024-03-08T03:10:30+00:00"
         },
         {
             "name": "swow/psr7-plus",
