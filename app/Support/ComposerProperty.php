@@ -2,8 +2,8 @@
 
 namespace App\Support;
 
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Arr;
+use Hyperf\Collection\Arr;
+use Hyperf\Contract\Arrayable;
 
 /**
  * @property string $name
@@ -80,7 +80,7 @@ class ComposerProperty implements Arrayable
         return $this->get(str_replace('_', '-', $name));
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return $this->attributes;
     }

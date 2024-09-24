@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use Qbhy\HyperfAuth\AuthAbility;
+use Qbhy\HyperfAuth\Authenticatable;
+
 /**
  * @property int $id
  * @property string $username
@@ -15,8 +18,10 @@ namespace App\Model;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */
-class AdminUser extends Model
+class AdminUser extends Model implements Authenticatable
 {
+    use AuthAbility;
+    
     /**
      * The table associated with the model.
      */

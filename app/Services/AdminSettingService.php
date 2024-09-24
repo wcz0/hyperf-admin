@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Arr;
 use App\Admin;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
-use App\Models\AdminSetting;
+use App\Model\AdminSetting;
+use Hyperf\Collection\Arr;
+use Hyperf\Context\ApplicationContext;
+use Hyperf\DbConnection\Db;
+use Psr\Http\Message\ResponseInterface;
+use Psr\SimpleCache\CacheInterface;
 
 class AdminSettingService extends AdminService
 {
@@ -46,7 +48,7 @@ class AdminSettingService extends AdminService
      */
     public function setMany(array $data)
     {
-        DB::beginTransaction();
+        Db::beginTransaction();
         try {
             foreach ($data as $key => $value) {
                 if (!$this->set($key, $value)) {
@@ -69,9 +71,9 @@ class AdminSettingService extends AdminService
      *
      * @param array $data
      *
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\JsonResource
+     * @return ResponseInterface
      */
-    public function adminSetMany(array $data)
+    public function adminSetMany(array $data): ResponseInterface
     {
         $prefix = admin_trans('admin.save');
 
@@ -106,10 +108,12 @@ class AdminSettingService extends AdminService
         if ($fresh) {
             return $this->query()->where('key', $key)->value('values') ?? $default;
         }
+        $cache = ApplicationContext::getContainer()->get(CacheInterface::class);
 
-        $value = Cache::rememberForever($this->getCacheKey($key), function () use ($key) {
-            return $this->query()->where('key', $key)->value('values');
-        });
+        if ($cache->has($this->getCacheKey($key))){
+            $value = $this->query()->where('key', $key)->value('values');
+            $cache->set($key, $value, 0); // 0 表示永久缓存
+        };
 
         return $value ?? $default;
     }
@@ -178,7 +182,8 @@ class AdminSettingService extends AdminService
      */
     public function clearCache($key)
     {
-        Cache::forget($this->getCacheKey($key));
+        $cache = ApplicationContext::getContainer()->get(CacheInterface::class);
+        $cache->delete($this->getCacheKey($key));
     }
 
     public function getCacheKey($key)

@@ -2,6 +2,8 @@
 
 namespace App\Support;
 
+use Hyperf\Contract\Arrayable;
+use Hyperf\Contract\Jsonable;
 use Hyperf\Stringable\Str;
 use Symfony\Component\Process\Process;
 
@@ -30,7 +32,7 @@ class Helper
 
         if (is_array($value)) {
         } else if ($value instanceof Jsonable) {
-            $value = json_decode($value->toJson(), true);
+            $value = json_decode($value->__toString(), true);
         } else if ($value instanceof Arrayable) {
             $value = $value->toArray();
         } else if (is_string($value)) {
@@ -166,7 +168,7 @@ class Helper
             }
         } else {
             $values = $map->filter(function ($_, $k) use ($class) {
-                return Str::afterLast($subject, 'search')::startsWith($class, $k);
+                return Str::startsWith($class, $k);
             })->first();
         }
 

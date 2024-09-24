@@ -2,8 +2,9 @@
 
 namespace App\Support;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Fluent;
+use Hyperf\Collection\Arr;
+
+use function Hyperf\Tappable\tap;
 
 /**
  * Class Context.

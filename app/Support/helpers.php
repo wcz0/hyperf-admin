@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Schema;
 
+use function Hyperf\Support\env;
+
 if (!function_exists('admin_url')) {
     function admin_url($path = null, $needPrefix = false)
     {
@@ -316,5 +318,19 @@ if (!function_exists('admin_pipeline')) {
     function admin_pipeline($passable)
     {
         return \App\Support\Pipeline::handle($passable);
+    }
+}
+
+if (!function_exists('url')) {
+    /**
+     * 返回url
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    function url(string $path = '')
+    {
+        return env('APP_URL') . '/' . ltrim($path, '/');
     }
 }

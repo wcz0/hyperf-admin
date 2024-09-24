@@ -7,10 +7,10 @@ namespace App\Model;
 
 
 /**
- * @property string $key
- * @property string $values
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property string $key 
+ * @property string $values 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
  */
 class AdminSetting extends Model
 {

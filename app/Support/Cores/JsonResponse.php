@@ -2,7 +2,8 @@
 
 namespace App\Support\Cores;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Hyperf\Di\Annotation\Inject;
+use Hyperf\HttpServer\Contract\ResponseInterface;
 
 class JsonResponse
 {
@@ -13,13 +14,16 @@ class JsonResponse
         'doNotDisplayToast' => 0,
     ];
 
+    #[Inject]
+    protected ResponseInterface $response;
+
     /**
      * @param string $message
      * @param mixed   $data
      *
-     * @return  \Illuminate\Http\JsonResponse
+     * @return
      */
-    public function fail(string $message = 'Service error', $data = null): \Illuminate\Http\JsonResponse
+    public function fail(string $message = 'Service error', $data = null)
     {
         $this->setFailMsg($message);
 
@@ -30,15 +34,15 @@ class JsonResponse
      * @param mixed   $data
      * @param string $message
      *
-     * @return \Illuminate\Http\JsonResponse|JsonResource
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function success($data = null, string $message = ''): \Illuminate\Http\JsonResponse|JsonResource
+    public function success($data = null, string $message = '')
     {
         $this->setSuccessMsg($message);
 
-        if ($data instanceof JsonResource) {
-            return $data->additional($this->additionalData)->response();
-        }
+        // if ($data instanceof JsonResource) {
+        //     return $data->additional($this->additionalData)->response();
+        // }
 
         if ($data === null) {
             $data = (object)$data;
@@ -47,23 +51,22 @@ class JsonResponse
         return $this->json($data);
     }
 
-    private function json($data)
+    private function json($data): \Psr\Http\Message\ResponseInterface
     {
-        if (config('app.debug')) {
-            $this->additionalData['_debug'] = [
-                'sql' => sql_record(),
-            ];
-        }
+        // if (config('app.debug')) {
+        //     $this->additionalData['_debug'] = [
+        //         'sql' => sql_record(),
+        //     ];
+        // }
 
-        return response()->json(array_merge($this->additionalData, ['data' => $data]));
+        return $this->response->json(array_merge($this->additionalData, ['data' => $data]));
     }
 
     /**
      * @param string $message
      *
-     * @return \Illuminate\Http\JsonResponse|JsonResource
      */
-    public function successMessage(string $message = ''): \Illuminate\Http\JsonResponse|JsonResource
+    public function successMessage(string $message = ''): \Psr\Http\Message\ResponseInterface
     {
         return $this->success([], $message);
     }

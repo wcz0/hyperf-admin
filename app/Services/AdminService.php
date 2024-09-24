@@ -2,15 +2,17 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Arr;
+// use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Renderers\Page;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Support\Facades\Route;
+// use Illuminate\Support\Facades\Schema;
+// use Illuminate\Database\Eloquent\Model;
 use App\Traits\ErrorTrait;
-use Illuminate\Database\Eloquent\Builder;
+// use Illuminate\Database\Eloquent\Builder;
 use App\Renderers\TableColumn;
+use Hyperf\Di\Annotation\Inject;
+use Hyperf\HttpServer\Contract\RequestInterface;
 
 abstract class AdminService
 {
@@ -20,12 +22,8 @@ abstract class AdminService
 
     protected string $modelName;
 
-    protected Request $request;
-
-    public function __construct()
-    {
-        $this->request = request();
-    }
+    #[Inject]
+    protected RequestInterface $request;
 
     public static function make(): static
     {

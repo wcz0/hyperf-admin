@@ -3,8 +3,9 @@
 namespace App\Support\Cores;
 
 use App\Admin;
+use Hyperf\HttpServer\Contract\RequestInterface;
+use Hyperf\Stringable\Str;
 use InvalidArgumentException;
-use Hyperf\Utils\Str;
 
 use function Hyperf\Collection\collect;
 
@@ -43,15 +44,17 @@ class Permission
      */
     public function authIntercept($request)
     {
+         // 1. 检查是否启用了认证功能
         if (!Admin::config('admin.auth.enable')) {
             return false;
         }
 
+        // 2. 获取需要排除认证的路径，进行判断
         $excepted = collect(Admin::config('admin.auth.except', []))
             ->merge($this->authExcept)
             ->map(fn($path) => $this->pathFormatting($path))
             ->contains(fn($except) => $request->is($except == '/' ? $except : trim($except, '/')));
-
+         // 3. 如果当前请求路径不在排除路径中并且用户未登录，返回 true，表示拦截请求
         return !$excepted && Admin::guard()->guest();
     }
 
@@ -106,18 +109,19 @@ class Permission
         return !$user?->allPermissions()->first(fn($permission) => $permission->shouldPassThrough($request));
     }
 
-    protected function checkRoutePermission(Request $request): bool
+    protected function checkRoutePermission(RequestInterface $request): bool
     {
         $middlewarePrefix = 'admin.permission:';
 
-        $middleware = collect($request->route()
-            ?->middleware())->first(fn($middleware) => Str::startsWith($middleware, $middlewarePrefix));
+        // ? 查找请求的中间件
+        // $middleware = collect($request->route()
+        //     ?->middleware())->first(fn($middleware) => Str::startsWith($middleware, $middlewarePrefix));
 
-        if (!$middleware) {
-            return false;
-        }
+        // if (!$middleware) {
+        //     return false;
+        // }
 
-        $args = explode(',', str_replace($middlewarePrefix, '', $middleware));
+        // $args = explode(',', str_replace($middlewarePrefix, '', $middleware));
 
         $method = array_shift($args);
 

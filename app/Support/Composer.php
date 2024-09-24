@@ -24,7 +24,7 @@ class Composer
     public static function loader()
     {
         if (! static::$loader) {
-            static::$loader = include base_path().'/vendor/autoload.php';
+            // static::$loader = include base_path().'/vendor/autoload.php';
         }
 
         return static::$loader;
@@ -47,16 +47,16 @@ class Composer
      */
     public static function getVersion(?string $packageName, ?string $lockFile = null)
     {
-        if (! $packageName) {
-            return null;
-        }
+        // if (! $packageName) {
+        //     return null;
+        // }
 
-        $lockFile = $lockFile ?: base_path('composer.lock');
+        // $lockFile = $lockFile ?: base_path('composer.lock');
 
-        $content = collect(static::fromJson($lockFile)['packages'] ?? [])
-            ->filter(function ($value) use ($packageName) {
-                return $value['name'] == $packageName;
-            })->first();
+        // $content = collect(static::fromJson($lockFile)['packages'] ?? [])
+        //     ->filter(function ($value) use ($packageName) {
+        //         return $value['name'] == $packageName;
+        //     })->first();
 
         return $content['version'] ?? null;
     }
@@ -67,19 +67,19 @@ class Composer
      */
     public static function fromJson(?string $path)
     {
-        if (isset(static::$files[$path])) {
-            return static::$files[$path];
-        }
+        // if (isset(static::$files[$path])) {
+        //     return static::$files[$path];
+        // }
 
-        if (! $path || ! is_file($path)) {
-            return static::$files[$path] = [];
-        }
+        // if (! $path || ! is_file($path)) {
+        //     return static::$files[$path] = [];
+        // }
 
-        try {
-            return static::$files[$path] = (array) json_decode(app('files')->get($path), true);
-        } catch (\Throwable $e) {
-        }
+        // try {
+        //     return static::$files[$path] = (array) json_decode(app('files')->get($path), true);
+        // } catch (\Throwable $e) {
+        // }
 
-        return static::$files[$path] = [];
+        // return static::$files[$path] = [];
     }
 }

@@ -3,19 +3,16 @@
 namespace App;
 
 
-use Slowlyo\Support\SqlRecord;
-use Illuminate\Support\Facades\Auth;
+
 use App\Extend\Manager;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Schema;
 use App\Traits\AssetsTrait;
 use App\Extend\ServiceProvider;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
-use App\Models\PersonalAccessToken;
 use App\Services\AdminSettingService;
-use App\Models\{AdminMenu, AdminRole, AdminUser, AdminPermission};
-use App\Support\{Context,
+use App\Model\{AdminMenu, AdminRole, AdminUser, AdminPermission};
+use App\Support\{
+    Context,
     Composer,
     Cores\Api,
     Cores\Route,
@@ -24,10 +21,21 @@ use App\Support\{Context,
     Cores\JsonResponse,
     Cores\Relationships
 };
+use Hyperf\Context\ApplicationContext;
+use Hyperf\Database\Schema\Schema;
+use Psr\SimpleCache\CacheInterface;
+
+use function Hyperf\Config\config;
 
 class Admin
 {
     use AssetsTrait;
+
+    /**
+     * @Inject
+     * @var AuthManager
+    */
+    protected static $auth;
 
     public static function make(): static
     {
@@ -60,7 +68,7 @@ class Admin
      */
     public static function menu()
     {
-        return app('admin.menu');
+        // return app('admin.menu');
     }
 
     /**
@@ -73,7 +81,7 @@ class Admin
 
     public static function guard()
     {
-        return Auth::guard(self::config('admin.auth.guard') ?: 'admin');
+        return self::$auth->guard(self::config('admin.auth.guard') ?: 'admin');
     }
 
     /**
@@ -112,11 +120,11 @@ class Admin
      */
     public static function extension(?string $name = '')
     {
-        if ($name) {
-            return app('admin.extend')->get($name);
-        }
+        // if ($name) {
+        //     return app('admin.extend')->get($name);
+        // }
 
-        return app('admin.extend');
+        // return app('admin.extend');
     }
 
     public static function classLoader()
@@ -131,7 +139,8 @@ class Admin
      */
     public static function context()
     {
-        return app('admin.context');
+        // return app('admin.context');
+
     }
 
     /**
@@ -139,7 +148,8 @@ class Admin
      */
     public static function setting()
     {
-        return app('admin.setting');
+        $adminSettingService =  ApplicationContext::getContainer()->get(AdminSettingService::class);
+        return $adminSettingService->make();
     }
 
     /**
@@ -189,7 +199,7 @@ class Admin
      */
     public static function module()
     {
-        return app('admin.module');
+        // return app('admin.module');
     }
 
     /**
@@ -219,11 +229,7 @@ class Admin
             $apiPrefix = self::config('admin.route.prefix');
         }
 
-        if (is_file(public_path('admin-assets/index.html'))) {
-            $view = file_get_contents(public_path('admin-assets/index.html'));
-        } else {
-            $view = file_get_contents(base_path('vendor/slowlyo/owl-admin/admin-views/dist/index.html'));
-        }
+        $view = file_get_contents(BASE_PATH . '/public/admin/index.html');
 
         $logoPath = self::config('admin.logo');
 
@@ -234,15 +240,16 @@ class Admin
 
     public static function hasTable($table)
     {
+        $cache = ApplicationContext::getContainer()->get(CacheInterface::class);
         $key = 'admin_has_table_' . $table;
-        if (cache()->has($key)) {
+        if ($cache->has($key)) {
             return true;
         }
 
         $has = Schema::hasTable($table);
 
         if ($has) {
-            cache()->forever($key, true);
+            $cache->set($key, true, 0);
         }
 
         return $has;
@@ -250,6 +257,7 @@ class Admin
 
     public static function version()
     {
-        return Composer::getVersion('slowlyo/owl-admin');
+        // return Composer::getVersion('slowlyo/owl-admin');
+        return '0.1.0';
     }
 }
