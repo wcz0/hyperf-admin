@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "643bef7384416a03014966d70648e64b",
+    "content-hash": "f83cfc5ed92f010a3bfb7219da616e79",
     "packages": [
         {
             "name": "96qbhy/hyperf-auth",
@@ -3829,6 +3829,68 @@
                 }
             ],
             "time": "2024-01-19T12:39:49+00:00"
+        },
+        {
+            "name": "mfuns-cn/hyperf-hashing",
+            "version": "v3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Mfuns-cn/hyperf-hashing.git",
+                "reference": "806a6e468e8cd30e88a11f2812a9de7d11885750"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Mfuns-cn/hyperf-hashing/zipball/806a6e468e8cd30e88a11f2812a9de7d11885750",
+                "reference": "806a6e468e8cd30e88a11f2812a9de7d11885750",
+                "shasum": ""
+            },
+            "require": {
+                "hyperf/config": "3.1.*",
+                "hyperf/di": "3.1.*",
+                "hyperf/framework": "3.1.*",
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "hyperf/testing": "3.1.*",
+                "phpstan/phpstan": "^1.0",
+                "swoole/ide-helper": "dev-master"
+            },
+            "type": "library",
+            "extra": {
+                "hyperf": {
+                    "config": "HyperfExt\\Hashing\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "HyperfExt\\Hashing\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eric Zhu",
+                    "email": "eric@zhu.email"
+                },
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "The Hyperf Hashing package.",
+            "keywords": [
+                "hashing",
+                "hyperf",
+                "php"
+            ],
+            "support": {
+                "source": "https://github.com/Mfuns-cn/hyperf-hashing/tree/v3.1"
+            },
+            "time": "2024-06-21T07:20:42+00:00"
         },
         {
             "name": "monolog/monolog",

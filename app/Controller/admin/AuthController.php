@@ -14,9 +14,6 @@ use Hyperf\Validation\Contract\ValidatorFactoryInterface;
 class AuthController extends Controller
 {
 
-    #[Inject]
-    protected ValidatorFactoryInterface $validationFactory;
-
     public function index(RequestInterface $request, ResponseInterface $response)
     {
         return $response->raw('Hello Hyperf!');
@@ -53,23 +50,23 @@ class AuthController extends Controller
                 throw new HttpException(400, $validator->errors()->first());
             }
 
-            $user = Admin::adminUserModel()::query()->where('username', $request->username)->first();
+            $user = Admin::adminUserModel()::query()->where('username', $this->request->input('username'))->first();
 
-            if ($user && Hash::check($request->password, $user->password)) {
+            if ($user && Hash::check($this->request->input('password'), $user->password)) {
                 if (!$user->enabled) {
-                    return $this->response()->fail(admin_trans('admin.user_disabled'));
+                    return $this->fail(admin_trans('admin.user_disabled'));
                 }
 
                 $module = Admin::currentModule(true);
                 $prefix = $module ? $module . '.' : '';
                 $token  = $user->createToken($prefix . 'admin')->plainTextToken;
 
-                return $this->response()->success(compact('token'), admin_trans('admin.login_successful'));
+                return $this->success(compact('token'), admin_trans('admin.login_successful'));
             }
 
-            abort(Response::HTTP_BAD_REQUEST, admin_trans('admin.login_failed'));
+            // abort(Response::HTTP_BAD_REQUEST, admin_trans('admin.login_failed'));
         } catch (\Exception $e) {
-            return $this->response()->fail($e->getMessage());
+            return $this->fail($e->getMessage());
         }
     }
 

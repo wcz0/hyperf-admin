@@ -23,8 +23,8 @@ Router::get('/favicon.ico', function () {
     return '';
 });
 
-Router::addGroup('admin-api', function () {
-    Router::get('login', [AuthController::class, 'loginPage']);
+Router::addGroup('/admin-api', function () {
+    Router::get('/login', [AuthController::class, 'loginPage']);
     Router::post('login', [AuthController::class, 'login']);
     Router::get('logout', [AuthController::class, 'logout']);
     Router::post('register', [AuthController::class, 'register']);
@@ -33,7 +33,7 @@ Router::addGroup('admin-api', function () {
     Router::get('no-content', [IndexController::class, 'noContent']);
     Router::get('_download_export', [IndexController::class, 'downloadExport']);
 
-    Router::addGroup('', function () {
+    Router::addGroup('/', function () {
         Router::post('upload_image', [IndexController::class, 'imageUpload']);
         Router::post('upload_file', [IndexController::class, 'fileUpload']);
         Router::get('menus', [IndexController::class, 'getMenus']);
