@@ -106,10 +106,10 @@ class Admin
      *
      * @return void
      */
-    public static function loadBaseRoute()
-    {
-        Route::baseLoad();
-    }
+    // public static function loadBaseRoute()
+    // {
+    //     Route::baseLoad();
+    // }
 
     /**
      * @param string|null $name
@@ -157,17 +157,18 @@ class Admin
      *
      * @param array $mix
      */
-    public static function mixMiddlewareGroup(array $mix = [])
-    {
-        Route::mixMiddlewareGroup($mix);
-    }
+    // public static function mixMiddlewareGroup(array $mix = [])
+    // {
+    //     Route::mixMiddlewareGroup($mix);
+    // }
 
     /**
      * @return AdminMenu
      */
     public static function adminMenuModel()
     {
-        return self::config('admin.models.admin_menu', AdminMenu::class);
+        // return self::config('admin.models.admin_menu', AdminMenu::class);
+        return self::config(AdminMenu::class);
     }
 
     /**
@@ -209,16 +210,16 @@ class Admin
      *
      * @return mixed|string|null
      */
-    public static function currentModule(bool $lower = false)
-    {
-        return Module::current($lower);
-    }
+    // public static function currentModule(bool $lower = false)
+    // {
+    //     return Module::current($lower);
+    // }
 
     public static function config($key, $default = '')
     {
-        if ($module = self::currentModule(true)) {
-            return config($module . '.' . $key, $default);
-        }
+        // if ($module = self::currentModule(true)) {
+        //     return config($module . '.' . $key, $default);
+        // }
 
         return config($key, $default);
     }

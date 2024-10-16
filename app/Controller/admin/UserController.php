@@ -6,5 +6,6 @@ namespace App\Controller\Admin;
 
 class UserController extends Controller
 {
+    
 
 }

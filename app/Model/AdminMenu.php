@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-
+use Hyperf\Database\Model\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -40,4 +40,37 @@ class AdminMenu extends Model
      * The attributes that should be cast to native types.
      */
     protected array $casts = ['id' => 'integer', 'parent_id' => 'integer', 'custom_order' => 'integer', 'url_type' => 'integer', 'visible' => 'integer', 'is_home' => 'integer', 'keep_alive' => 'integer', 'is_full' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+
+    const TYPE_ROUTE  = 1;
+    const TYPE_LINK   = 2;
+    const TYPE_IFRAME = 3;
+    const TYPE_PAGE   = 4;
+
+    public static function getType(): array
+    {
+        return [
+            self::TYPE_ROUTE  => admin_trans('admin.admin_menu.route'),
+            self::TYPE_LINK   => admin_trans('admin.admin_menu.link'),
+            self::TYPE_IFRAME => admin_trans('admin.admin_menu.iframe'),
+            self::TYPE_PAGE   => admin_trans('admin.admin_menu.page'),
+        ];
+    }
+
+    /**
+     * 父级菜单
+     *
+     * @return BelongsTo
+     */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function getTitleAttribute()
+    {
+        $transKey = ($this->extension ? $this->extension . '::' : '') . "menu.{$this->attributes['title']}";
+        $translate = admin_trans($transKey);
+
+        return $translate == $transKey ? $this->attributes['title'] : $translate;
+    }
 }

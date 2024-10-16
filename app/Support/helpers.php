@@ -1,8 +1,18 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
+// use Illuminate\Support\Facades\Schema;
 
+use App\Admin;
+use Hyperf\Collection\Arr;
+use Hyperf\Collection\Collection;
+use Hyperf\Database\Schema\Schema;
+use HyperfAi\Encryption\Crypt;
+
+use HyperfAi\Encryption\Exception\DecryptException;
+use function Hyperf\Collection\collect;
+use function Hyperf\Collection\value;
 use function Hyperf\Support\env;
+use function Hyperf\Translation\trans;
 
 if (!function_exists('admin_url')) {
     function admin_url($path = null, $needPrefix = false)
@@ -86,37 +96,37 @@ if (!function_exists('admin_path')) {
 }
 
 
-if (!function_exists('amis')) {
-    /**
-     * @param $type
-     *
-     * @return \App\Renderers\Amis|\App\Renderers\Component
-     */
-    function amis($type = null)
-    {
-        if (filled($type)) {
-            return \App\Renderers\Component::make()->setType($type);
-        }
+// if (!function_exists('amis')) {
+//     /**
+//      * @param $type
+//      *
+//      * @return \App\Renderers\Amis|\App\Renderers\Component
+//      */
+//     function amis($type = null)
+//     {
+//         if (filled($type)) {
+//             return \App\Renderers\Component::make()->setType($type);
+//         }
 
-        return \App\Renderers\Amis::make();
-    }
-}
+//         return \App\Renderers\Amis::make();
+//     }
+// }
 
-if (!function_exists('amisMake')) {
-    /**
-     * @return \App\Renderers\Amis
-     * @deprecated
-     */
-    function amisMake()
-    {
-        return \App\Renderers\Amis::make();
-    }
-}
+// if (!function_exists('amisMake')) {
+//     /**
+//      * @return \App\Renderers\Amis
+//      * @deprecated
+//      */
+//     function amisMake()
+//     {
+//         return \App\Renderers\Amis::make();
+//     }
+// }
 
 if (!function_exists('admin_encode')) {
     function admin_encode($str)
     {
-        return \Illuminate\Support\Facades\Crypt::encryptString($str);
+        return Crypt::encrypt($str);
     }
 }
 
@@ -124,8 +134,8 @@ if (!function_exists('admin_decode')) {
     function admin_decode($decodeStr)
     {
         try {
-            $str = \Illuminate\Support\Facades\Crypt::decryptString($decodeStr);
-        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            $str = Crypt::decrypt($decodeStr);
+        } catch (DecryptException $e) {
             $str = '';
         }
 
@@ -134,22 +144,22 @@ if (!function_exists('admin_decode')) {
 }
 
 
-if (!function_exists('file_upload_handle')) {
-    /**
-     * 处理文件上传回显问题
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
-     */
-    function file_upload_handle()
-    {
-        $storage = \Illuminate\Support\Facades\Storage::disk(\App\Admin::config('admin.upload.disk'));
+// if (!function_exists('file_upload_handle')) {
+//     /**
+//      * 处理文件上传回显问题
+//      *
+//      * @return \Illuminate\Database\Eloquent\Casts\Attribute
+//      */
+//     function file_upload_handle()
+//     {
+//         $storage = Storage::disk(Admin::config('admin.upload.disk'));
 
-        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
-            get: fn($value) => $value ? admin_resource_full_path($value) : '',
-            set: fn($value) => str_replace($storage->url(''), '', $value)
-        );
-    }
-}
+//         return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+//             get: fn($value) => $value ? admin_resource_full_path($value) : '',
+//             set: fn($value) => str_replace($storage->url(''), '', $value)
+//         );
+//     }
+// }
 
 if (!function_exists('file_upload_handle_multi')) {
     /**
@@ -208,7 +218,7 @@ if (!function_exists('admin_extension_path')) {
      */
     function admin_extension_path(?string $path = null)
     {
-        $dir = rtrim(config('admin.extension.dir'), '/') ?: base_path('extensions');
+        $dir = rtrim(config('admin.extension.dir'), '/') ?: BASE_PATH . 'extensions';
 
         $path = ltrim($path, '/');
 
@@ -223,49 +233,49 @@ if (!function_exists('admin_user')) {
     }
 }
 
-if (!function_exists('admin_abort')) {
-    /**
-     * 抛出异常
-     *
-     * @param string $message           异常信息
-     * @param array  $data              异常数据
-     * @param int    $doNotDisplayToast 是否显示提示 (解决在 amis 中抛出异常时，会显示两次提示的问题)
-     *
-     * @return mixed
-     * @throws null
-     */
-    function admin_abort($message = '', $data = [], $doNotDisplayToast = 0)
-    {
-        throw new \App\Exceptions\AdminException($message, $data, $doNotDisplayToast);
-    }
+// if (!function_exists('admin_abort')) {
+//     /**
+//      * 抛出异常
+//      *
+//      * @param string $message           异常信息
+//      * @param array  $data              异常数据
+//      * @param int    $doNotDisplayToast 是否显示提示 (解决在 amis 中抛出异常时，会显示两次提示的问题)
+//      *
+//      * @return mixed
+//      * @throws null
+//      */
+//     function admin_abort($message = '', $data = [], $doNotDisplayToast = 0)
+//     {
+//         throw new \App\Exceptions\AdminException($message, $data, $doNotDisplayToast);
+//     }
 
-    function amis_abort($message = '', $data = [])
-    {
-        admin_abort($message, $data, 1);
-    }
+//     function amis_abort($message = '', $data = [])
+//     {
+//         admin_abort($message, $data, 1);
+//     }
 
-    /**
-     * 如果条件成立，抛出异常
-     *
-     * @param boolean $flag              条件
-     * @param string  $message           异常信息
-     * @param array   $data              异常数据
-     * @param int     $doNotDisplayToast 是否显示提示 (解决在 amis 中抛出异常时，会显示两次提示的问题)
-     *
-     * @return void
-     */
-    function admin_abort_if($flag, $message = '', $data = [], $doNotDisplayToast = 0)
-    {
-        if ($flag) {
-            admin_abort($message, $data, $doNotDisplayToast);
-        }
-    }
+//     /**
+//      * 如果条件成立，抛出异常
+//      *
+//      * @param boolean $flag              条件
+//      * @param string  $message           异常信息
+//      * @param array   $data              异常数据
+//      * @param int     $doNotDisplayToast 是否显示提示 (解决在 amis 中抛出异常时，会显示两次提示的问题)
+//      *
+//      * @return void
+//      */
+//     function admin_abort_if($flag, $message = '', $data = [], $doNotDisplayToast = 0)
+//     {
+//         if ($flag) {
+//             admin_abort($message, $data, $doNotDisplayToast);
+//         }
+//     }
 
-    function amis_abort_if($flag, $message = '', $data = [])
-    {
-        admin_abort_if($flag, $message, $data, 1);
-    }
-}
+//     function amis_abort_if($flag, $message = '', $data = [])
+//     {
+//         admin_abort_if($flag, $message, $data, 1);
+//     }
+// }
 
 if (!function_exists('owl_admin_path')) {
     function owl_admin_path($path = '')
@@ -314,12 +324,12 @@ if (!function_exists('admin_trans')) {
     }
 }
 
-if (!function_exists('admin_pipeline')) {
-    function admin_pipeline($passable)
-    {
-        return \App\Support\Pipeline::handle($passable);
-    }
-}
+// if (!function_exists('admin_pipeline')) {
+//     function admin_pipeline($passable)
+//     {
+//         return \App\Support\Pipeline::handle($passable);
+//     }
+// }
 
 if (!function_exists('url')) {
     /**
@@ -332,5 +342,67 @@ if (!function_exists('url')) {
     function url(string $path = '')
     {
         return env('APP_URL') . '/' . ltrim($path, '/');
+    }
+}
+
+if (! function_exists('data_get')) {
+    /**
+     * Get an item from an array or object using "dot" notation.
+     *
+     * @param  mixed  $target
+     * @param  string|array|int|null  $key
+     * @param  mixed  $default
+     * @return mixed
+     */
+    function data_get($target, $key, $default = null)
+    {
+        if (is_null($key)) {
+            return $target;
+        }
+
+        $key = is_array($key) ? $key : explode('.', $key);
+
+        foreach ($key as $i => $segment) {
+            unset($key[$i]);
+
+            if (is_null($segment)) {
+                return $target;
+            }
+
+            if ($segment === '*') {
+                if ($target instanceof Collection) {
+                    $target = $target->all();
+                } elseif (! is_iterable($target)) {
+                    return value($default);
+                }
+
+                $result = [];
+
+                foreach ($target as $item) {
+                    $result[] = data_get($item, $key);
+                }
+
+                return in_array('*', $key) ? Arr::collapse($result) : $result;
+            }
+
+            $segment = match ($segment) {
+                '\*' => '*',
+                '\{first}' => '{first}',
+                '{first}' => array_key_first(is_array($target) ? $target : collect($target)->all()),
+                '\{last}' => '{last}',
+                '{last}' => array_key_last(is_array($target) ? $target : collect($target)->all()),
+                default => $segment,
+            };
+
+            if (Arr::accessible($target) && Arr::exists($target, $segment)) {
+                $target = $target[$segment];
+            } elseif (is_object($target) && isset($target->{$segment})) {
+                $target = $target->{$segment};
+            } else {
+                return value($default);
+            }
+        }
+
+        return $target;
     }
 }

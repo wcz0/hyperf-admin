@@ -19,7 +19,7 @@ class Controller extends AbstractController
     public function success(array $data = [], string $message = 'success', int $code = 200, int $status = 0)
     {
         return $this->response->json([
-            'status' => 0,
+            'status' => $status,
             'code' => $code,
             'message' => $message,
             'data' => $data
@@ -28,15 +28,15 @@ class Controller extends AbstractController
 
     /**
      * @param string $message
+     * @param array $data
      * @param int $code
      * @param int $status
-     * @param array $data
      *
      */
-    public function fail(string $message = 'fail', int $code = 500, int $status = 1, array $data = [])
+    public function fail(string $message = 'fail', array $data = [], int $code = 500, int $status = 1)
     {
         return $this->response->json([
-            'status' => 1,
+            'status' => $status,
             'code' => $code,
             'message' => $message,
             'data' => $data

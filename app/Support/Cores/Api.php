@@ -5,6 +5,8 @@ namespace App\Support\Cores;
 use App\Admin;
 use App\Support\Apis\{DataListApi, DataCreateApi, DataDetailApi, DataDeleteApi, DataUpdateApi};
 
+use function Hyperf\Collection\collect;
+
 class Api
 {
     public static function boot()
@@ -21,7 +23,7 @@ class Api
             return;
         }
 
-        collect(scandir(app_path('/ApiTemplates')))
+        collect(scandir(BASE_PATH . '/ApiTemplates'))
             ->filter(fn($file) => !in_array($file, ['.', '..']) && str_ends_with($file, '.php'))
             ->each(function ($file) {
                 $class = 'App\\ApiTemplates\\' . str_replace('.php', '', $file);

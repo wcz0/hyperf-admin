@@ -7,22 +7,23 @@ namespace App\Controller\Admin;
 use App\Admin;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpMessage\Exception\HttpException;
-use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\HttpServer\Contract\ResponseInterface;
 use Hyperf\Validation\Contract\ValidatorFactoryInterface;
+use HyperfExt\Hashing\Hash;
 
 class AuthController extends Controller
 {
+    #[Inject]
+    protected ValidatorFactoryInterface $validationFactory;
 
-    public function index(RequestInterface $request, ResponseInterface $response)
+    public function index()
     {
-        return $response->raw('Hello Hyperf!');
+        return $this->response->raw('Hello Hyperf!');
     }
-
 
     public function logout()
     {
-
+        Admin::user()->logout();
+        return $this->success();
     }
 
     public function login()
@@ -31,12 +32,10 @@ class AuthController extends Controller
             if (!$this->request->has('captcha')) {
                 return $this->fail(admin_trans('admin.required', ['attribute' => admin_trans('admin.captcha')]));
             }
-
             // if (strtolower(cache()->pull($this->request->input('sys_captcha'))) != strtolower($this->request->input('captcha'))) {
             //     return $this->fail(admin_trans('admin.captcha_error'));
             // }
         }
-
         try {
             $validator = $this->validationFactory->make($this->request->all(), [
                 'username' => 'required',
@@ -45,26 +44,21 @@ class AuthController extends Controller
                 'username.required' => admin_trans('admin.required', ['attribute' => admin_trans('admin.username')]),
                 'password.required' => admin_trans('admin.required', ['attribute' => admin_trans('admin.password')]),
             ]);
-
             if ($validator->fails()) {
                 throw new HttpException(400, $validator->errors()->first());
             }
-
             $user = Admin::adminUserModel()::query()->where('username', $this->request->input('username'))->first();
-
             if ($user && Hash::check($this->request->input('password'), $user->password)) {
                 if (!$user->enabled) {
                     return $this->fail(admin_trans('admin.user_disabled'));
                 }
-
                 $module = Admin::currentModule(true);
                 $prefix = $module ? $module . '.' : '';
                 $token  = $user->createToken($prefix . 'admin')->plainTextToken;
-
                 return $this->success(compact('token'), admin_trans('admin.login_successful'));
             }
-
             // abort(Response::HTTP_BAD_REQUEST, admin_trans('admin.login_failed'));
+            return $this->fail(admin_trans('admin.login_failed'));
         } catch (\Exception $e) {
             return $this->fail($e->getMessage());
         }

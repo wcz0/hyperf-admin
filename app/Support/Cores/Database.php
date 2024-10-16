@@ -2,13 +2,25 @@
 
 namespace App\Support\Cores;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use Hyperf\Contract\ConfigInterface;
+use Hyperf\Database\Schema\Blueprint;
+use Hyperf\Database\Schema\Schema;
+use Hyperf\DbConnection\Db;
+use Hyperf\Di\Annotation\Inject;
+use HyperfExt\Hashing\Hash;
+
+use function Hyperf\Collection\collect;
+
+// use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\Schema;
+// use Illuminate\Database\Schema\Blueprint;
 
 class Database
 {
     private string|null $moduleName;
+
+    #[Inject]
+    protected ConfigInterface $config;
 
     public function __construct($moduleName = null)
     {
@@ -218,7 +230,7 @@ class Database
             return array_merge($data, ['created_at' => $now, 'updated_at' => $now]);
         };
 
-        $adminUser       = DB::table($this->tableName('admin_users'));
+        $adminUser       = Db::table($this->tableName('admin_users'));
         $adminMenu       = DB::table($this->tableName('admin_menus'));
         $adminPermission = DB::table($this->tableName('admin_permissions'));
         $adminRole       = DB::table($this->tableName('admin_roles'));
@@ -227,7 +239,7 @@ class Database
         $adminUser->truncate();
         $adminUser->insert($data([
             'username' => 'admin',
-            'password' => bcrypt('admin'),
+            'password' => Hash::make('admin'),
             'name'     => 'Administrator',
         ]));
 
@@ -343,7 +355,7 @@ class Database
     {
         try {
             return collect(json_decode(json_encode(Schema::getAllTables()), true))
-                ->map(fn($i) => config('database.default') == 'sqlite' ? $i['name'] : array_shift($i))
+                ->map(fn($i) => $this->config->get('database.default.driver') == 'sqlite' ? $i['name'] : array_shift($i))
                 ->toArray();
         } catch (\Throwable $e) {
         }

@@ -1,5 +1,7 @@
 # Introduction
 
+hyperf Admin amis 基础框架(弃坑)
+
 This is a skeleton application using the Hyperf framework. This application is meant to be used as a starting place for those looking to get their feet wet with Hyperf Framework.
 
 # Requirements
@@ -8,7 +10,7 @@ Hyperf has some requirements for the system environment, it can only run under L
 
 The various versions of Dockerfile have been prepared for you in the [hyperf/hyperf-docker](https://github.com/hyperf/hyperf-docker) project, or directly based on the already built [hyperf/hyperf](https://hub.docker.com/r/hyperf/hyperf) Image to run.
 
-When you don't want to use Docker as the basis for your running environment, you need to make sure that your operating environment meets the following requirements:  
+When you don't want to use Docker as the basis for your running environment, you need to make sure that your operating environment meets the following requirements:
 
  - PHP >= 8.1
  - Any of the following network engines
